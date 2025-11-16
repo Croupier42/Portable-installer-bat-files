@@ -4,33 +4,33 @@ CHCP 65001 > NUL
 ::	Дополнить user_pref https://forum.ru-board.com/topic.cgi?forum=2&topic=5924&start=0&limit=1&m=1#1
 ::	Zen config	https://docs.zen-browser.app/guides/about-config-flags
 
-::	Название браузера
-SET BrowserName=ZenBrowser
-::	Обновление core
-SET Update_core=0
+::	Название директории
+SET DirName=ZenBrowser
+::	Обновление
+SET Update=0
 
-TITLE Portable %BrowserName% Installer [16.11.2025]
+TITLE Portable %DirName% Installer [17.11.2025]
 CD /d "%~dp0"
 ::	Создание директории если её нет и перемещение батника в неё
-IF EXIST "..\%BrowserName%" GOTO core
-MD "%BrowserName%"
-COPY "%~nx0" "%BrowserName%\%~nx0"
-CD "%BrowserName%"
+IF EXIST "..\%DirName%" GOTO core
+MD "%DirName%"
+COPY "%~nx0" "%DirName%\%~nx0"
+CD "%DirName%"
 START "" "%~nx0"
 CD ..
 DEL "%~nx0" /q && EXIT
 
 :core
 ::	Удаление директории core при обновлении
-IF %Update_core% == 0 IF EXIST "core" GOTO config
+IF %Update% == 0 IF EXIST "core" GOTO config
 IF EXIST "core" DEL "core" /q
 
 	ECHO Загрузка 7zr . . .
 CURL -RL# "https://www.7-zip.org/a/7zr.exe" -o "7zr.exe"
-	ECHO Загрузка %BrowserName% . . .
-CURL -RL# "https://github.com/zen-browser/desktop/releases/latest/download/zen.installer.exe" -o "%BrowserName%.7z"
-	ECHO Распаковка %BrowserName% . . .
-"7zr.exe" x -t7z -bso0 "%BrowserName%.7z" -xr!setup.exe -xr!desktop-launcher -xr!uninstall -xr!application.ini -xr!*agent* -xr!*crash* -xr!*maintenance* -xr!*update* -xr!precomplete -xr!removed-files
+	ECHO Загрузка %DirName% . . .
+CURL -RL# "https://github.com/zen-browser/desktop/releases/latest/download/zen.installer.exe" -o "%DirName%.7z"
+	ECHO Распаковка %DirName% . . .
+"7zr.exe" x -t7z -bso0 "%DirName%.7z" -xr!setup.exe -xr!desktop-launcher -xr!uninstall -xr!application.ini -xr!*agent* -xr!*crash* -xr!*maintenance* -xr!*update* -xr!precomplete -xr!removed-files
 	ECHO Загрузка libportable . . .
 CURL -RL# "https://github.com/adonais/libportable/releases/latest/download/portable_bin.7z" -o "libportable.7z"
 	ECHO Распаковка portable64.dll . . .
@@ -74,7 +74,7 @@ CURL -RL# "https://addons.mozilla.org/firefox/downloads/latest/sponsorblock/" -o
 
 :clean
 	ECHO Очистка установочных файлов . . .
-DEL "7zr.exe" "%BrowserName%.7z" "libportable.7z" /q
+DEL "7zr.exe" "%DirName%.7z" "libportable.7z" /q
 
 :config
 	ECHO Создание файлов настроек . . .
