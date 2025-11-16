@@ -94,8 +94,15 @@ ECHO user_pref^("browser.shell.checkDefaultBrowser", false^); //Проверят
 ECHO user_pref^("intl.locale.requested", "ru,en-US"^); //Язык
 ECHO user_pref^("browser.translations.neverTranslateLanguages", "en,ru"^); //Не переводить эти языки
 ECHO user_pref^("browser.download.useDownloadDir", false^); //Спрашивать куда загружать файл
+ECHO user_pref^("media.videocontrols.picture-in-picture.video-toggle.enabled", false^); //Картинка в картинке
 ECHO user_pref^("signon.rememberSignons", false^); //Сохранять пароли
 ECHO user_pref^("extensions.formautofill.creditCards.enabled", false^); //Сохранять карты
+ECHO user_pref^("permissions.default.geo", 2^); //Отключить геолокацию
+ECHO user_pref^("permissions.default.camera", 2^); //Отключить камеру
+ECHO user_pref^("permissions.default.microphone", 2^); //Отключить микрофон
+ECHO user_pref^("permissions.default.desktop-notification", 2^); //Отключить уведомления
+ECHO user_pref^("media.autoplay.default", 5^); //Отключить автовоспроизведение
+ECHO user_pref^("permissions.default.xr", 2^); //Отключить запрос к VR
 ECHO user_pref^("browser.safebrowsing.malware.enabled", false^); //Блокировать опасные загрузки
 ECHO user_pref^("browser.safebrowsing.phishing.enabled", false^); //Блокировать фишинговые сайты
 ECHO user_pref^("dom.security.https_only_mode", true^); //Только HTTPS
@@ -111,7 +118,7 @@ ECHO user_pref^("zen.tabs.show-newtab-vertical", false^); //Показывать
 ::	userChrome.css	Стили
 IF NOT EXIST "userdata\chrome" MD "userdata\chrome"
 (
-ECHO .zen-current-workspace-indicator //Убрать индикатор рабочего пространства
+ECHO .zen-current-workspace-indicator
 ECHO {
 ECHO display: none !important;
 ECHO }
