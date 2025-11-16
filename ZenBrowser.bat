@@ -95,7 +95,9 @@ ECHO user_pref^("intl.locale.requested", "ru,en-US"^); //Язык
 ECHO user_pref^("browser.translations.neverTranslateLanguages", "en,ru"^); //Не переводить эти языки
 ECHO user_pref^("browser.download.useDownloadDir", false^); //Спрашивать куда загружать файл
 ECHO user_pref^("media.videocontrols.picture-in-picture.video-toggle.enabled", false^); //Картинка в картинке
-ECHO user_pref^("signon.rememberSignons", false^); //Сохранять пароли
+ECHO user_pref^("signon.generation.enabled", false^); //Предлагать надёжные пароли
+ECHO user_pref^("signon.firefoxRelay.feature", "disabled"^); //Предлагать псевдонимы...
+ECHO user_pref^("signon.management.page.breach-alerts.enabled", false^); //Показывать уведомления...
 ECHO user_pref^("extensions.formautofill.creditCards.enabled", false^); //Сохранять карты
 ECHO user_pref^("permissions.default.geo", 2^); //Отключить геолокацию
 ECHO user_pref^("permissions.default.camera", 2^); //Отключить камеру
