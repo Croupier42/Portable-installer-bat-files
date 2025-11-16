@@ -88,6 +88,51 @@ ECHO {"policies":{"DisableAppUpdate":true,"DisableTelemetry":true}}
 ::	prefs.js	Главный файл настроек
 IF NOT EXIST "userdata" MD "userdata"
 (
+ECHO //Настройки кеша insorg
+ECHO user_pref^("browser.cache.disk.capacity", 0^);
+ECHO user_pref^("browser.cache.disk.enable", false^);
+ECHO user_pref^("browser.cache.disk.smart_size.enabled", false^);
+ECHO user_pref^("browser.cache.disk.smart_size.first_run", false^);
+ECHO user_pref^("browser.cache.disk_cache_ssl", false^);
+ECHO user_pref^("browser.cache.memory.capacity", -1^);
+ECHO user_pref^("browser.cache.offline.enable", false^);
+ECHO user_pref^("browser.cache.offline.insecure.enable", false^);
+ECHO user_pref^("browser.cache.offline.storage.enable", false^);
+ECHO user_pref^("extensions.getAddons.cache.enabled", false^);
+ECHO user_pref^("gfx.canvas.skiagl.dynamic-cache", false^);
+ECHO user_pref^("intl.charsetmenu.browser.cache", "UTF-8"^);
+ECHO user_pref^("pdfjs.enabledCache.state", false^);
+ECHO //Настройки телеметрии insorg
+ECHO user_pref^("browser.newtabpage.activity-stream.feeds.telemetry", false^);
+ECHO user_pref^("browser.newtabpage.activity-stream.telemetry", false^);
+ECHO user_pref^("browser.newtabpage.activity-stream.telemetry.ping.endpoint", ""^);
+ECHO user_pref^("browser.newtabpage.activity-stream.telemetry.structuredIngestion", false^);
+ECHO user_pref^("browser.newtabpage.activity-stream.telemetry.structuredIngestion.endpoint", ""^);
+ECHO user_pref^("browser.ping-centre.telemetry", false^);
+ECHO user_pref^("browser.search.serpEventTelemetryCategorization.enabled", false^);
+ECHO user_pref^("devtools.onboarding.telemetry.logged", false^);
+ECHO user_pref^("media.wmf.deblacklisting-for-telemetry-in-gpu-process", false^);
+ECHO user_pref^("security.app_menu.recordEventTelemetry", false^);
+ECHO user_pref^("security.certerrors.recordEventTelemetry", false^);
+ECHO user_pref^("security.identitypopup.recordEventTelemetry", false^);
+ECHO user_pref^("security.protectionspopup.recordEventTelemetry", false^);
+ECHO user_pref^("toolkit.telemetry.archive.enabled", false^);
+ECHO user_pref^("toolkit.telemetry.bhrPing.enabled", false^);
+ECHO user_pref^("toolkit.telemetry.cachedClientID", ""^);
+ECHO user_pref^("toolkit.telemetry.enabled", false^);
+ECHO user_pref^("toolkit.telemetry.firstShutdownPing.enabled", false^);
+ECHO user_pref^("toolkit.telemetry.hybridContent.enabled", false^);
+ECHO user_pref^("toolkit.telemetry.newProfilePing.enabled", false^);
+ECHO user_pref^("toolkit.telemetry.optoutSample", false^);
+ECHO user_pref^("toolkit.telemetry.pioneer-new-studies-available", false^);
+ECHO user_pref^("toolkit.telemetry.reportingpolicy.firstRun", false^);
+ECHO user_pref^("toolkit.telemetry.server", ""^);
+ECHO user_pref^("toolkit.telemetry.shutdownPingSender.enabled", false^);
+ECHO user_pref^("toolkit.telemetry.shutdownPingSender.enabledFirstSession", false^);
+ECHO user_pref^("toolkit.telemetry.unified", false^);
+ECHO user_pref^("toolkit.telemetry.updatePing.enabled", false^);
+ECHO user_pref^("toolkit.telemetry.unifiedIsOptIn", false^);
+ECHO //Мои настройки
 ECHO user_pref^("toolkit.legacyUserProfileCustomizations.stylesheets", true^); //Включить .css
 ECHO user_pref^("layout.testing.scrollbars.always-hidden", true^); //Скрыть скроллбар
 ECHO user_pref^("browser.shell.checkDefaultBrowser", false^); //Проверять установлен ли браузер по умолчанию
