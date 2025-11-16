@@ -1,12 +1,12 @@
 @ECHO OFF
 CHCP 65001 > NUL
 ::	Mozilla Firefox (часть 25)	https://forum.ru-board.com/topic.cgi?forum=5&topic=51478&glp
-::	Дополнить https://forum.ru-board.com/topic.cgi?forum=2&topic=5924&start=0&limit=1&m=1#1
+::	Дополнить user_pref https://forum.ru-board.com/topic.cgi?forum=2&topic=5924&start=0&limit=1&m=1#1
 ::	Zen config	https://docs.zen-browser.app/guides/about-config-flags
 
 ::	Название браузера
 SET BrowserName=ZenBrowser
-::	Обновление firefox
+::	Обновление core
 SET Update_core=0
 
 TITLE Portable %BrowserName% Installer [16.11.2025]
