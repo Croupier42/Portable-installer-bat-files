@@ -90,6 +90,13 @@ ECHO {"policies":{"DisableAppUpdate":true,"DisableTelemetry":true}}
 ::	prefs.js	Главный файл настроек
 IF NOT EXIST "userdata" MD "userdata"
 (
+ECHO //Настройки private insorg
+@echo user_pref^("browser.privatebrowsing.autostart", false^);
+@echo user_pref^("browser.privatebrowsing.enable-new-indicator", false^);
+@echo user_pref^("browser.search.suggest.enabled.private", false^);
+@echo user_pref^("browser.theme.dark-private-windows", false^);
+@echo user_pref^("dom.private-attribution.submission.enabled", false^);
+@echo user_pref^("extensions.privatebrowsing.notification", true^);
 ECHO //Настройки кеша insorg
 ECHO user_pref^("browser.cache.disk.capacity", 0^);
 ECHO user_pref^("browser.cache.disk.enable", false^);
@@ -172,7 +179,17 @@ ECHO .zen-current-workspace-indicator
 ECHO {
 ECHO display: none !important;
 ECHO }
+@echo.
+@echo./* 119 */
+@echo.#private-browsing-indicator-with-label ^> label {display: none;}
+@echo.
+@echo./* 133 */
+@echo.#TabsToolbar :is^(#private-browsing-indicator-with-label,.private-browsing-indicator-with-label^) ^> label { display: none !important; }
 )>"userdata\chrome\userChrome.css"
+
+(
+@echo.@-moz-document url^("about:privatebrowsing"^) { .showPrivate { display: none !important; } html.private { --in-content-page-background: menu !important; } }
+)>"userdata\chrome\userContent.css"
 
 ECHO Осталось вручную настроить поисковые системы, панели инструментов, тему и расширения
 PAUSE
