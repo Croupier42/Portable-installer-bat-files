@@ -63,6 +63,8 @@ IF NOT EXIST "core\distribution\extensions" MD "core\distribution\extensions"
 CURL -RL# "https://addons.mozilla.org/firefox/downloads/latest/adnauseam/" -o "core\distribution\extensions\adnauseam@rednoise.org.xpi"
 	ECHO Загрузка Dark Reader . . .
 CURL -RL# https://addons.mozilla.org/firefox/downloads/latest/darkreader -o "core\distribution\extensions\addon@darkreader.org.xpi"
+	ECHO Загрузка I don't care about cookies . . .
+CURL -RL# "https://addons.mozilla.org/firefox/downloads/latest/i-dont-care-about-cookies" -o "core\distribution\extensions\jid1-KKzOGWgsW3Ao4Q@jetpack.xpi"
 	ECHO Загрузка Imagus mod . . .
 CURL -RL# https://addons.mozilla.org/firefox/downloads/latest/imagus-mod/ -o "core\distribution\extensions\{6833a9cb-d329-4d96-a062-76b1b663cd2c}.xpi"
 	ECHO Загрузка Search By Image . . .
