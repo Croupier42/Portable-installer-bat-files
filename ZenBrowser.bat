@@ -3,7 +3,8 @@ CHCP 65001 > NUL
 ::	Mozilla Firefox (часть 25)	https://forum.ru-board.com/topic.cgi?forum=5&topic=51478&glp
 ::	Дополнить user_pref https://forum.ru-board.com/topic.cgi?forum=2&topic=5924&start=0&limit=1&m=1#1
 ::	Zen config	https://docs.zen-browser.app/guides/about-config-flags
-::	Добавить настройки расширений если возможно
+::	Добавить настройки поисковых систем, панели инструментов, расширений если возможно
+::	Файлов с настройками расширений не нашёл, наверно через мини гайд внутри батника
 
 ::	Название директории
 SET DirName=ZenBrowser
@@ -139,7 +140,6 @@ ECHO //Мои настройки
 ECHO //Интерфейс
 ECHO user_pref^("zen.welcome-screen.seen", true^); //Начальный экран просмотрен
 ECHO user_pref^("zen.theme.content-element-separation", 0^); //Убрать рамку вокруг окна
-ECHO // user_pref^("zen.view.use-single-toolbar", false^); //Несколько панелей
 ECHO user_pref^("zen.view.experimental-no-window-controls", true^); //Убрать верхнюю панель
 ECHO user_pref^("zen.view.compact.enable-at-startup", true^); //Включить компактный вид
 ECHO user_pref^("zen.view.compact.hide-toolbar", true^); //Скрыть обе панели
@@ -154,9 +154,8 @@ ECHO user_pref^("permissions.default.geo", 2^); //Отключить геоло�
 ECHO user_pref^("permissions.default.camera", 2^); //Отключить камеру
 ECHO user_pref^("permissions.default.microphone", 2^); //Отключить микрофон
 ECHO user_pref^("permissions.default.desktop-notification", 2^); //Отключить уведомления
-ECHO // user_pref^("media.autoplay.default", 0^); //Включить автовоспроизведение аудио и видео
-ECHO // user_pref^("permissions.default.xr", 2^); //Отключить запрос к VR
 ECHO //Остальное
+ECHO user_pref^("browser.aboutConfig.showWarning", false^); //Предупреждение about:config
 ECHO user_pref^("browser.shell.checkDefaultBrowser", false^); //Проверять установлен ли браузер по умолчанию
 ECHO user_pref^("browser.download.useDownloadDir", false^); //Спрашивать куда загружать файл
 ECHO user_pref^("signon.generation.enabled", false^); //Предлагать надёжные пароли
@@ -172,11 +171,8 @@ ECHO user_pref^("doh-rollout.disable-heuristics", true^); //Отключить D
 ::	userChrome.css	Стили
 IF NOT EXIST "userdata\chrome" MD "userdata\chrome"
 (
-ECHO./* Убрать индикатор рабочего пространства */
-ECHO .zen-current-workspace-indicator
-ECHO {
-ECHO display: none !important;
-ECHO }
+ECHO .zen-current-workspace-indicator { display: none !important; } /* Убрать индикатор рабочего пространства */
+ECHO #TabsToolbar { -moz-window-dragging: no-drag !important; } /* Отключить перетаскивание окна */
 )>"userdata\chrome\userChrome.css"
 
 ECHO Осталось вручную настроить поисковые системы, панели инструментов и расширения
