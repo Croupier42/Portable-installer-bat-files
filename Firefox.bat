@@ -1,120 +1,184 @@
-@ECHO OFF
-TITLE Portable Firefox Installer [08.11.2025]
-CD /d "%~dp0"
+::	https://github.com/Croupier42/Portable-installer-bat-files
+::	Отличие от ZenBrowser.bat в загрузке firefox и userChrome.css
 ::	Mozilla Firefox (часть 25)	https://forum.ru-board.com/topic.cgi?forum=5&topic=51478&glp
-::	Использовать метод портабелизации libportable, при изменении нужна переустановка
-SET libportable=1
-::	Обновление firefox
-SET Update_core=0
-::	Создание директории firefox если её нет и перемещение батника в неё
-IF EXIST "../Firefox" GOTO core
-MD "Firefox"
-COPY "%~nx0" "Firefox/%~nx0"
-START Firefox/"%~nx0"
-DEL "%~nx0" /q && EXIT
-
+::	Дополнить user_pref https://forum.ru-board.com/topic.cgi?forum=2&topic=5924&start=0&limit=1&m=1#1
+::	Zen config	https://docs.zen-browser.app/guides/about-config-flags
+::	Добавить настройки поисковых систем, панели инструментов, расширений если возможно
+::	Файлов с настройками расширений не нашёл, наверно через мини гайд внутри батника
+::	Убрать из распаковки ненужные файлы
+::	Добаваить функцию "Сделать браузером по умолчанию"
+	@ECHO OFF
+	CHCP 65001 > NUL
+	TITLE Portable %~n0 Creator [20.11.2025]
+	CD /d "%~dp0"
+	IF EXIST "..\%~n0" GOTO core
+		MD "%~n0"
+		COPY "%~nx0" "%~n0\%~nx0"
+		CD "%~n0"
+		START "" "%~nx0"
+		CD ..
+		DEL /Q "%~nx0" && EXIT
 :core
-::	Запуск через этот же батник, если используется метод батника
-IF %libportable% == 0 IF EXIST "core\firefox.exe" START core\firefox.exe -no-remote -profile userdata && EXIT
-
-::	Удаление директории core при обновлении
-IF %Update_core% == 0 IF EXIST "core" GOTO config
-IF EXIST "core" DEL "core" /q
-
-::	Скачивание и распаковка 7zr и firefox
-	ECHO Downloading 7zr . . .
-CURL -RL# "https://www.7-zip.org/a/7zr.exe" -o "7zr.exe"
-	ECHO Downloading Firefox . . .
-CURL -RL# "https://download.mozilla.org/?product=firefox-latest&os=win64&lang=ru" -o "Firefox.7z"
-	ECHO Extracting Firefox . . .
-"7zr.exe" x -t7z -bso0 "Firefox.7z" -xr!setup.exe -xr!desktop-launcher -xr!uninstall -xr!application.ini -xr!*agent* -xr!*crash* -xr!*maintenance* -xr!*update* -xr!precomplete -xr!removed-files
-
-:libportable
-::	Скачивание и распаковка libportable
-IF %libportable% == 0 GOTO extensions
-	ECHO Downloading libportable . . .
-CURL -RL# "https://github.com/adonais/libportable/releases/latest/download/portable_bin.7z" -o "libportable.7z"
-	ECHO Extracting portable64.dll . . .
-"7zr.exe" e -t7z -bso0 "libportable.7z" -o"core" "portable64.dll" -r
-
-::	Создание файла настроек libportable
-	ECHO Creating portable.ini . . .
-(
-ECHO [General]
-ECHO Portable=1
-ECHO PortableDataPath=../userdata
-ECHO CreateCrashDump=0
-ECHO GdiBatchLimit=0
-ECHO ProcessAffinityMask=0
-ECHO Update=0
-ECHO DisDedicate=1
-ECHO [env]
-ECHO MOZ_LEGACY_PROFILES=1
-ECHO TmpDataPath=..
-)>"core\portable.ini"
-
-::	Редактирование файла зависимостей для запуска libportable
-	ECHO Editing dependentlibs.list . . .
-ECHO portable64.dll > "core\dependentlibs.list.new"
-TYPE "core\dependentlibs.list" >> "core\dependentlibs.list.new"
-MOVE /y "core\dependentlibs.list.new" "core\dependentlibs.list" > NUL
-
+	IF EXIST "core" (
+		ECHO Удаление ранее установленного %~n0 . . .
+		RD /S /Q "core"
+	)
+	MD "temp"
+	ECHO Загрузка 7zr . . .
+		CURL -RL# -o "temp\7zr.exe" "https://www.7-zip.org/a/7zr.exe"
+	ECHO Загрузка %~n0 . . .
+		CURL -RL# -o "temp\%~n0.7z" "https://download.mozilla.org/?product=firefox-latest&os=win64&lang=ru"
+::	ECHO Распаковка %~n0 . . .
+		temp\7zr x -t7z -bso0 "temp\%~n0.7z" -xr!setup.exe -xr!desktop-launcher -xr!uninstall -xr!application.ini -xr!*agent* -xr!*crash* -xr!*maintenance* -xr!*update* -xr!precomplete -xr!removed-files
+::	ECHO Создание файла политик policies.json для отключения автообновлений и телеметрии
+		IF NOT EXIST "core\distribution" MD "core\distribution"
+		ECHO {"policies":{"DisableAppUpdate":true,"DisableTelemetry":true}}>"core\distribution\policies.json"
+	ECHO Загрузка libportable . . .
+		CURL -RL# -o "temp\libportable.7z" "https://github.com/adonais/libportable/releases/latest/download/portable_bin.7z"
+::	ECHO Распаковка portable64.dll . . .
+		temp\7zr e -t7z -bso0 "temp\libportable.7z" -o"core" "portable64.dll" -r
+::	ECHO Создание файла настроек libportable . . .
+		(
+			ECHO [General]
+			ECHO Portable=1
+			ECHO PortableDataPath=../userdata
+			ECHO CreateCrashDump=0
+			ECHO GdiBatchLimit=0
+			ECHO ProcessAffinityMask=0
+			ECHO Update=0
+			ECHO DisDedicate=1
+			ECHO [env]
+			ECHO MOZ_LEGACY_PROFILES=1
+			ECHO TmpDataPath=..
+		)>"core\portable.ini"
+::	ECHO Редактирование файла зависимостей для запуска libportable . . .
+		ECHO portable64.dll > "core\dependentlibs.list.new"
+		TYPE "core\dependentlibs.list" >> "core\dependentlibs.list.new"
+		MOVE /y "core\dependentlibs.list.new" "core\dependentlibs.list" > NUL
 :extensions
-::	Установка расширений
-IF NOT EXIST "core\distribution\extensions" MD "core\distribution\extensions"
-	ECHO Downloading AdNauseam . . .
-CURL -RL# "https://addons.mozilla.org/firefox/downloads/latest/adnauseam/" -o "core\distribution\extensions\adnauseam@rednoise.org.xpi"
-	ECHO Downloading Dark Reader . . .
-CURL -RL# https://addons.mozilla.org/firefox/downloads/latest/darkreader -o "core\distribution\extensions\addon@darkreader.org.xpi"
-	ECHO Downloading Imagus mod . . .
-CURL -RL# https://addons.mozilla.org/firefox/downloads/latest/imagus-mod/ -o "core\distribution\extensions\{6833a9cb-d329-4d96-a062-76b1b663cd2c}.xpi"
-::	ECHO Downloading NoScript . . .
-::CURL -RL# "https://addons.mozilla.org/firefox/downloads/latest/noscript/" -o "core\distribution\extensions\{73a6fe31-595d-460b-a920-fcc0f8843232}.xpi"
-	ECHO Downloading Search By Image . . .
-CURL -RL# https://addons.mozilla.org/firefox/downloads/latest/search_by_image/ -o "core\distribution\extensions\{2e5ff8c8-32fe-46d0-9fc8-6b8986621f3c}.xpi"
-	ECHO Downloading Simple Translate . . .
-CURL -RL# https://addons.mozilla.org/firefox/downloads/latest/simple-translate/ -o "core\distribution\extensions\simple-translate@sienori.xpi"
-	ECHO Downloading SponsorBlock . . .
-CURL -RL# "https://addons.mozilla.org/firefox/downloads/latest/sponsorblock/" -o "core\distribution\extensions\sponsorBlocker@ajay.app.xpi"
-
-:clean
-::	Очистка установочных файлов
-	ECHO Deleting downloaded files . . .
-DEL "7zr.exe" "Firefox.7z" "libportable.7z" /q
-
-:config
-ECHO Creating preference files . . .
-
-::	policies.json	Отключение автообновления и телеметрии
-IF NOT EXIST "core\distribution" MD "core\distribution"
-(
-ECHO {"policies":{"DisableAppUpdate":true,"DisableTelemetry":true}}
-)>"core\distribution\policies.json"
-
-::	prefs.js	Главный файл настроек
-::	Дополнить https://forum.ru-board.com/topic.cgi?forum=2&topic=5924&start=0&limit=1&m=1#1
-IF NOT EXIST "userdata" MD "userdata"
-(
-ECHO user_pref^("toolkit.legacyUserProfileCustomizations.stylesheets", true^);
-)>"userdata\prefs.js"
-
-::	userChrome.css	Стили
-IF NOT EXIST "userdata\chrome" MD "userdata\chrome"
-CURL -RL# "https://raw.githubusercontent.com/MrOtherGuy/firefox-csshacks/refs/heads/master/chrome/autohide_toolbox.css" -o "userdata\chrome\userChrome.css"
-(
-@echo.
-@echo.
-@echo.
-@echo.
-@echo./* Tab's corners */
-@echo.@-moz-document url^("chrome://browser/content/browser.xhtml"^) { :root {
-@echo. --tab-block-margin:0px !important ;
-@echo. --tab-border-radius:0px !important ;
-@echo. --toolbarbutton-outer-padding:1px !important ;
-@echo. --toolbarbutton-inner-padding:4px !important ;
-@echo. --toolbar-start-end-padding:1px !important ;
-@echo. --bookmark-block-padding:1px !important ;
-@echo. --urlbar-min-height:24px !important ;
-@echo. --urlbar-icon-padding:3px !important ;
-@echo.} }
-)>>"chrome\userChrome.css"
+	IF NOT EXIST "core\distribution\extensions" MD "core\distribution\extensions"
+	ECHO Загрузка AdNauseam . . .
+		CURL -RL# -o "core\distribution\extensions\adnauseam@rednoise.org.xpi" "https://addons.mozilla.org/firefox/downloads/latest/adnauseam/"
+	ECHO Загрузка Dark Reader . . .
+		CURL -RL# -o "core\distribution\extensions\addon@darkreader.org.xpi" "https://addons.mozilla.org/firefox/downloads/latest/darkreader"
+	ECHO Загрузка I don't care about cookies . . .
+		CURL -RL# -o "core\distribution\extensions\jid1-KKzOGWgsW3Ao4Q@jetpack.xpi" "https://addons.mozilla.org/firefox/downloads/latest/i-dont-care-about-cookies"
+	ECHO Загрузка Imagus mod . . .
+		CURL -RL# -o "core\distribution\extensions\{6833a9cb-d329-4d96-a062-76b1b663cd2c}.xpi" "https://addons.mozilla.org/firefox/downloads/latest/imagus-mod/"
+	ECHO Загрузка Search By Image . . .
+		CURL -RL# -o "core\distribution\extensions\{2e5ff8c8-32fe-46d0-9fc8-6b8986621f3c}.xpi" "https://addons.mozilla.org/firefox/downloads/latest/search_by_image/"
+	ECHO Загрузка Simple Translate . . .
+		CURL -RL# -o "core\distribution\extensions\simple-translate@sienori.xpi" "https://addons.mozilla.org/firefox/downloads/latest/simple-translate/"
+	ECHO Загрузка SponsorBlock . . .
+		CURL -RL# -o "core\distribution\extensions\sponsorBlocker@ajay.app.xpi" "https://addons.mozilla.org/firefox/downloads/latest/sponsorblock/"
+:userdata
+::	ECHO Создание главного файла настроек prefs.js . . .
+		IF NOT EXIST "userdata" MD "userdata"
+		(
+			ECHO // Настройки кеша insorg
+			ECHO user_pref^("browser.cache.disk.capacity", 0^);
+			ECHO user_pref^("browser.cache.disk.enable", false^);
+			ECHO user_pref^("browser.cache.disk.smart_size.enabled", false^);
+			ECHO user_pref^("browser.cache.disk.smart_size.first_run", false^);
+			ECHO user_pref^("browser.cache.disk_cache_ssl", false^);
+			ECHO user_pref^("browser.cache.memory.capacity", -1^);
+			ECHO user_pref^("browser.cache.offline.enable", false^);
+			ECHO user_pref^("browser.cache.offline.insecure.enable", false^);
+			ECHO user_pref^("browser.cache.offline.storage.enable", false^);
+			ECHO user_pref^("extensions.getAddons.cache.enabled", false^);
+			ECHO user_pref^("gfx.canvas.skiagl.dynamic-cache", false^);
+			ECHO user_pref^("intl.charsetmenu.browser.cache", "UTF-8"^);
+			ECHO user_pref^("pdfjs.enabledCache.state", false^);
+			ECHO // Настройки телеметрии insorg
+			ECHO user_pref^("browser.newtabpage.activity-stream.feeds.telemetry", false^);
+			ECHO user_pref^("browser.newtabpage.activity-stream.telemetry", false^);
+			ECHO user_pref^("browser.newtabpage.activity-stream.telemetry.ping.endpoint", ""^);
+			ECHO user_pref^("browser.newtabpage.activity-stream.telemetry.structuredIngestion", false^);
+			ECHO user_pref^("browser.newtabpage.activity-stream.telemetry.structuredIngestion.endpoint", ""^);
+			ECHO user_pref^("browser.ping-centre.telemetry", false^);
+			ECHO user_pref^("browser.search.serpEventTelemetryCategorization.enabled", false^);
+			ECHO user_pref^("devtools.onboarding.telemetry.logged", false^);
+			ECHO user_pref^("media.wmf.deblacklisting-for-telemetry-in-gpu-process", false^);
+			ECHO user_pref^("security.app_menu.recordEventTelemetry", false^);
+			ECHO user_pref^("security.certerrors.recordEventTelemetry", false^);
+			ECHO user_pref^("security.identitypopup.recordEventTelemetry", false^);
+			ECHO user_pref^("security.protectionspopup.recordEventTelemetry", false^);
+			ECHO user_pref^("toolkit.telemetry.archive.enabled", false^);
+			ECHO user_pref^("toolkit.telemetry.bhrPing.enabled", false^);
+			ECHO user_pref^("toolkit.telemetry.cachedClientID", ""^);
+			ECHO user_pref^("toolkit.telemetry.enabled", false^);
+			ECHO user_pref^("toolkit.telemetry.firstShutdownPing.enabled", false^);
+			ECHO user_pref^("toolkit.telemetry.hybridContent.enabled", false^);
+			ECHO user_pref^("toolkit.telemetry.newProfilePing.enabled", false^);
+			ECHO user_pref^("toolkit.telemetry.optoutSample", false^);
+			ECHO user_pref^("toolkit.telemetry.pioneer-new-studies-available", false^);
+			ECHO user_pref^("toolkit.telemetry.reportingpolicy.firstRun", false^);
+			ECHO user_pref^("toolkit.telemetry.server", ""^);
+			ECHO user_pref^("toolkit.telemetry.shutdownPingSender.enabled", false^);
+			ECHO user_pref^("toolkit.telemetry.shutdownPingSender.enabledFirstSession", false^);
+			ECHO user_pref^("toolkit.telemetry.unified", false^);
+			ECHO user_pref^("toolkit.telemetry.updatePing.enabled", false^);
+			ECHO user_pref^("toolkit.telemetry.unifiedIsOptIn", false^);
+			ECHO // Мои настройки
+			ECHO // Интерфейс
+			ECHO user_pref^("zen.welcome-screen.seen", true^); // Начальный экран просмотрен
+			ECHO user_pref^("zen.theme.content-element-separation", 0^); // Убрать рамку вокруг окна
+			ECHO user_pref^("zen.view.experimental-no-window-controls", true^); // Убрать верхнюю панель
+			ECHO user_pref^("zen.view.compact.enable-at-startup", true^); // Включить компактный вид
+			ECHO user_pref^("zen.view.compact.hide-toolbar", true^); // Скрыть обе панели
+			ECHO user_pref^("zen.tabs.show-newtab-vertical", false^); // Показывать иконку новой вкладки
+			ECHO user_pref^("toolkit.legacyUserProfileCustomizations.stylesheets", true^); // Включить userChrome.css
+			ECHO user_pref^("layout.testing.scrollbars.always-hidden", true^); // Скрыть скроллбар
+			ECHO user_pref^("intl.locale.requested", "ru,en-US"^); // Язык
+			ECHO user_pref^("browser.translations.neverTranslateLanguages", "en,ru"^); // Не переводить эти языки
+			ECHO user_pref^("media.videocontrols.picture-in-picture.video-toggle.enabled", false^); // Картинка в картинке
+			ECHO // Разрешения
+			ECHO user_pref^("permissions.default.geo", 2^); // Отключить геолокацию
+			ECHO user_pref^("permissions.default.camera", 2^); // Отключить камеру
+			ECHO user_pref^("permissions.default.microphone", 2^); // Отключить микрофон
+			ECHO user_pref^("permissions.default.desktop-notification", 2^); // Отключить уведомления
+			ECHO // Остальное
+			ECHO user_pref^("browser.aboutConfig.showWarning", false^); // Предупреждение about:config
+			ECHO user_pref^("browser.shell.checkDefaultBrowser", false^); // Проверять установлен ли браузер по умолчанию
+			ECHO user_pref^("browser.download.useDownloadDir", false^); // Спрашивать куда загружать файл
+			ECHO user_pref^("signon.generation.enabled", false^); // Предлагать надёжные пароли
+			ECHO user_pref^("signon.firefoxRelay.feature", "disabled"^); // Предлагать псевдонимы...
+			ECHO user_pref^("signon.management.page.breach-alerts.enabled", false^); // Показывать уведомления...
+			ECHO user_pref^("extensions.formautofill.creditCards.enabled", false^); // Сохранять карты
+			ECHO user_pref^("browser.safebrowsing.malware.enabled", false^); // Блокировать опасные загрузки
+			ECHO user_pref^("browser.safebrowsing.phishing.enabled", false^); // Блокировать фишинговые сайты
+			ECHO user_pref^("dom.security.https_only_mode", true^); // Только HTTPS
+			ECHO user_pref^("doh-rollout.disable-heuristics", true^); // Отключить DoH
+		)>"userdata\prefs.js"
+::	ECHO Создание  файла стилей userChrome.css . . .
+		IF NOT EXIST "userdata\chrome" MD "userdata\chrome"
+		CURL -RL# "https://raw.githubusercontent.com/MrOtherGuy/firefox-csshacks/refs/heads/master/chrome/autohide_toolbox.css" -o "userdata\chrome\userChrome.css"
+		(
+			@echo.
+			@echo.
+			@echo.
+			@echo.
+			@echo./* Tab's corners */
+			@echo.@-moz-document url^("chrome://browser/content/browser.xhtml"^) { :root {
+			@echo. --tab-block-margin:0px !important ;
+			@echo. --tab-border-radius:0px !important ;
+			@echo. --toolbarbutton-outer-padding:1px !important ;
+			@echo. --toolbarbutton-inner-padding:4px !important ;
+			@echo. --toolbar-start-end-padding:1px !important ;
+			@echo. --bookmark-block-padding:1px !important ;
+			@echo. --urlbar-min-height:24px !important ;
+			@echo. --urlbar-icon-padding:3px !important ;
+			@echo.} }
+			ECHO.
+			ECHO #TabsToolbar { -moz-window-dragging: no-drag !important; } /* Отключить перетаскивание окна */
+		)>>"userdata\chrome\userChrome.css"
+:end
+::	ECHO Очистка установочных файлов . . .
+		RD /S /Q "temp"
+	ECHO.
+	ECHO.
+	ECHO.
+	ECHO Исполняемый файл: "%~n0\core\zen.exe"
+	ECHO Осталось вручную настроить поисковые системы, панели инструментов и расширения
+	PAUSE
+	EXIT
