@@ -69,9 +69,6 @@
 		CURL -RL# -o "core\distribution\extensions\simple-translate@sienori.xpi" "https://addons.mozilla.org/firefox/downloads/latest/simple-translate/"
 	ECHO Загрузка SponsorBlock . . .
 		CURL -RL# -o "core\distribution\extensions\sponsorBlocker@ajay.app.xpi" "https://addons.mozilla.org/firefox/downloads/latest/sponsorblock/"
-:clean
-::	ECHO Очистка установочных файлов . . .
-		RD /S /Q "temp"
 :userdata
 ::	ECHO Создание главного файла настроек prefs.js . . .
 		IF NOT EXIST "userdata" MD "userdata"
@@ -157,12 +154,14 @@
 			ECHO .zen-current-workspace-indicator { display: none !important; } /* Убрать индикатор рабочего пространства */
 			ECHO #TabsToolbar { -moz-window-dragging: no-drag !important; } /* Отключить перетаскивание окна */
 		)>"userdata\chrome\userChrome.css"
-	ECHO.
-	ECHO.
-	ECHO.
-	ECHO Исполняемый файл браузера: "%~n0\core\zen.exe"
-	ECHO Осталось вручную настроить поисковые системы, панели инструментов и расширения
 :end
+::	ECHO Очистка установочных файлов . . .
+		RD /S /Q "temp"
+	ECHO.
+	ECHO.
+	ECHO.
+	ECHO Исполняемый файл: "%~n0\core\zen.exe"
+	ECHO Осталось вручную настроить поисковые системы, панели инструментов и расширения
 	PAUSE
 	START "" "https://github.com/Croupier42/Portable-installer-bat-files"
 	EXIT

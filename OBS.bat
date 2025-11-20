@@ -25,21 +25,20 @@
 		TAR -xf "temp\%~n0.zip"
 	ECHO Загрузка win-capture-audio . . .
 		CURL -RL# -o "temp\win-capture-audio.zip" "https://github.com/bozbez/win-capture-audio/releases/download/v2.2.3-beta/win-capture-audio-2.2.3-beta.zip"
-::	ECHO Распаковка portable64.dll . . .
+::	ECHO Распаковка win-capture-audio.zip . . .
 		TAR -xf "temp\win-capture-audio.zip"
+:userdata
 ::	ECHO Создание файла portable_mode.txt для работы OBS в портативном режиме . . .
-	IF NOT EXIST "portable_mode.txt" BREAK > "portable_mode.txt"
-:clean
+		IF NOT EXIST "portable_mode.txt" BREAK > "portable_mode.txt"
+:end
 ::	ECHO Очистка установочных файлов . . .
 		RD /S /Q "temp"
-:userdata
 	ECHO.
 	ECHO.
 	ECHO.
-	ECHO Исполняемый файл браузера: "%~n0\bin\64bit\obs64.exe"
+	ECHO Исполняемый файл: "%~n0\bin\64bit\obs64.exe"
 	ECHO Автор скрипта не умеет в настройки OBS через файлы, так что придётся это делать ручками
 	ECHO Пы.Сы. научите в настройки, очень хочется ^<3
-:end
 	PAUSE
 	START "" "https://github.com/Croupier42/Portable-installer-bat-files"
 	EXIT
