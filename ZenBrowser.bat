@@ -1,3 +1,4 @@
+::	https://github.com/Croupier42/Portable-installer-bat-files
 ::	Mozilla Firefox (часть 25)	https://forum.ru-board.com/topic.cgi?forum=5&topic=51478&glp
 ::	Дополнить user_pref https://forum.ru-board.com/topic.cgi?forum=2&topic=5924&start=0&limit=1&m=1#1
 ::	Zen config	https://docs.zen-browser.app/guides/about-config-flags
@@ -163,5 +164,4 @@
 	ECHO Исполняемый файл: "%~n0\core\zen.exe"
 	ECHO Осталось вручную настроить поисковые системы, панели инструментов и расширения
 	PAUSE
-	START "" "https://github.com/Croupier42/Portable-installer-bat-files"
 	EXIT

@@ -1,3 +1,4 @@
+::	https://github.com/Croupier42/Portable-installer-bat-files
 ::	Сделать CURL по последнему релизу
 ::	Сделать Удаление текущей версии с сохранением файлав пользователя
 	@ECHO OFF
@@ -61,5 +62,4 @@
 	ECHO Русский язык применится при втором запуске
 	ECHO Для запуска Better than Adventure! нужна Adoptium Java 17
 	PAUSE
-	START "" "https://github.com/Croupier42/Portable-installer-bat-files"
 	EXIT

@@ -1,3 +1,4 @@
+::	https://github.com/Croupier42/Portable-installer-bat-files
 ::	Сделать CURL по последнему релизу
 ::	Добавить настройки OBS
 	@ECHO OFF
@@ -40,5 +41,4 @@
 	ECHO Автор скрипта не умеет в настройки OBS через файлы, так что придётся это делать ручками
 	ECHO Пы.Сы. научите в настройки, очень хочется ^<3
 	PAUSE
-	START "" "https://github.com/Croupier42/Portable-installer-bat-files"
 	EXIT
