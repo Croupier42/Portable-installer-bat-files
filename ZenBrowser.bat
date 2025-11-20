@@ -21,19 +21,20 @@
 		ECHO Удаление ранее установленного %~n0 . . .
 		RD /S /Q "core"
 	)
+	MD "temp"
 	ECHO Загрузка 7zr . . .
-		CURL -RL# -o "7zr.exe" "https://www.7-zip.org/a/7zr.exe"
+		CURL -RL# -o "temp\7zr.exe" "https://www.7-zip.org/a/7zr.exe"
 	ECHO Загрузка %~n0 . . .
-		CURL -RL# -o "%~n0.7z" "https://github.com/zen-browser/desktop/releases/latest/download/zen.installer.exe"
+		CURL -RL# -o "temp\%~n0.7z" "https://github.com/zen-browser/desktop/releases/latest/download/zen.installer.exe"
 ::	ECHO Распаковка %~n0 . . .
-		7zr x -t7z -bso0 "%~n0.7z" -xr!setup.exe -xr!desktop-launcher -xr!uninstall -xr!application.ini -xr!*agent* -xr!*crash* -xr!*maintenance* -xr!*update* -xr!precomplete -xr!removed-files
+		temp\7zr x -t7z -bso0 "temp\%~n0.7z" -xr!setup.exe -xr!desktop-launcher -xr!uninstall -xr!application.ini -xr!*agent* -xr!*crash* -xr!*maintenance* -xr!*update* -xr!precomplete -xr!removed-files
 ::	ECHO Создание файла политик policies.json для отключения автообновлений и телеметрии
 		IF NOT EXIST "core\distribution" MD "core\distribution"
 		ECHO {"policies":{"DisableAppUpdate":true,"DisableTelemetry":true}}>"core\distribution\policies.json"
 	ECHO Загрузка libportable . . .
-		CURL -RL# -o "libportable.7z" "https://github.com/adonais/libportable/releases/latest/download/portable_bin.7z"
+		CURL -RL# -o "temp\libportable.7z" "https://github.com/adonais/libportable/releases/latest/download/portable_bin.7z"
 ::	ECHO Распаковка portable64.dll . . .
-		7zr e -t7z -bso0 "libportable.7z" -o"core" "portable64.dll" -r
+		temp\7zr e -t7z -bso0 "temp\libportable.7z" -o"core" "portable64.dll" -r
 ::	ECHO Создание файла настроек libportable . . .
 		(
 			ECHO [General]
@@ -70,7 +71,7 @@
 		CURL -RL# -o "core\distribution\extensions\sponsorBlocker@ajay.app.xpi" "https://addons.mozilla.org/firefox/downloads/latest/sponsorblock/"
 :clean
 ::	ECHO Очистка установочных файлов . . .
-		DEL /Q "7zr.exe" "%~n0.7z" "libportable.7z"
+		RD /S /Q "temp"
 :userdata
 ::	ECHO Создание главного файла настроек prefs.js . . .
 		IF NOT EXIST "userdata" MD "userdata"
@@ -160,9 +161,7 @@
 	ECHO.
 	ECHO.
 	ECHO Исполняемый файл браузера: "%~n0\core\zen.exe"
-	ECHO.
 	ECHO Осталось вручную настроить поисковые системы, панели инструментов и расширения
-	ECHO.
 :end
 	PAUSE
 	START "" "https://github.com/Croupier42/Portable-installer-bat-files"
