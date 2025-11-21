@@ -126,6 +126,7 @@
 			ECHO user_pref^("zen.view.compact.enable-at-startup", true^); // Включить компактный вид
 			ECHO user_pref^("zen.view.compact.hide-toolbar", true^); // Скрыть обе панели
 			ECHO user_pref^("zen.tabs.show-newtab-vertical", false^); // Показывать иконку новой вкладки
+			ECHO user_pref^("zen.view.show-newtab-button-top", false^); // Показывать иконку новой вкладки, а также открывать новые вкладки сверху
 			ECHO user_pref^("toolkit.legacyUserProfileCustomizations.stylesheets", true^); // Включить userChrome.css
 			ECHO user_pref^("layout.testing.scrollbars.always-hidden", true^); // Скрыть скроллбар
 			ECHO user_pref^("intl.locale.requested", "ru,en-US"^); // Язык
@@ -136,6 +137,7 @@
 			ECHO user_pref^("permissions.default.camera", 2^); // Отключить камеру
 			ECHO user_pref^("permissions.default.microphone", 2^); // Отключить микрофон
 			ECHO user_pref^("permissions.default.desktop-notification", 2^); // Отключить уведомления
+			ECHO user_pref^("media.autoplay.default", 5^); // Отключить автовоспроизведение
 			ECHO // Остальное
 			ECHO user_pref^("browser.aboutConfig.showWarning", false^); // Предупреждение about:config
 			ECHO user_pref^("browser.shell.checkDefaultBrowser", false^); // Проверять установлен ли браузер по умолчанию
