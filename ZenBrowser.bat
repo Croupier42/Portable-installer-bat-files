@@ -127,6 +127,7 @@
 			ECHO user_pref^("zen.view.compact.hide-toolbar", true^); // Скрыть обе панели
 			ECHO user_pref^("zen.tabs.show-newtab-vertical", false^); // Показывать иконку новой вкладки
 			ECHO user_pref^("zen.view.show-newtab-button-top", false^); // Показывать иконку новой вкладки, а также открывать новые вкладки сверху
+			ECHO user_pref^("zen.glance.enabled", false^); // Предпросмотр
 			ECHO user_pref^("toolkit.legacyUserProfileCustomizations.stylesheets", true^); // Включить userChrome.css
 			ECHO user_pref^("layout.testing.scrollbars.always-hidden", true^); // Скрыть скроллбар
 			ECHO user_pref^("intl.locale.requested", "ru,en-US"^); // Язык
@@ -170,4 +171,5 @@
 	PAUSE
 
 	EXIT
+
 
