@@ -151,6 +151,7 @@
 			ECHO user_pref^("dom.security.https_only_mode", true^); // Только HTTPS
 			ECHO user_pref^("doh-rollout.disable-heuristics", true^); // Отключить DoH
 			ECHO user_pref^("default-browser-agent.enabled", false^); // The Default Browser Agent task checks when the default changes from Zen to another browser.
+			ECHO user_pref^("app.update.background.previous.reasons", "[\"app.update.background.enabled=false\",\"on Windows but cannot usually use BITS\",\"the maintenance service registry key is not present\"]"^); // Автообновление включено, в фоне отключено
 		)>"userdata\prefs.js"
 ::	ECHO Создание  файла стилей userChrome.css . . .
 		IF NOT EXIST "userdata\chrome" MD "userdata\chrome"
@@ -169,3 +170,4 @@
 	PAUSE
 
 	EXIT
+
