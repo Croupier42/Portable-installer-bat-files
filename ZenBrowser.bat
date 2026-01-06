@@ -150,6 +150,7 @@
 			ECHO user_pref^("browser.safebrowsing.phishing.enabled", false^); // Блокировать фишинговые сайты
 			ECHO user_pref^("dom.security.https_only_mode", true^); // Только HTTPS
 			ECHO user_pref^("doh-rollout.disable-heuristics", true^); // Отключить DoH
+			ECHO user_pref^("default-browser-agent.enabled", false^); // The Default Browser Agent task checks when the default changes from Zen to another browser.
 		)>"userdata\prefs.js"
 ::	ECHO Создание  файла стилей userChrome.css . . .
 		IF NOT EXIST "userdata\chrome" MD "userdata\chrome"
@@ -166,4 +167,5 @@
 	ECHO Исполняемый файл: "%~n0\core\zen.exe"
 	ECHO Осталось вручную настроить поисковые системы, панели инструментов и расширения
 	PAUSE
+
 	EXIT
