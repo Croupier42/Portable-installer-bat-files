@@ -153,6 +153,7 @@
 			ECHO user_pref^("doh-rollout.disable-heuristics", true^); // Отключить DoH
 			ECHO user_pref^("default-browser-agent.enabled", false^); // The Default Browser Agent task checks when the default changes from Zen to another browser.
 			ECHO user_pref^("app.update.background.previous.reasons", "[\"app.update.background.enabled=false\",\"on Windows but cannot usually use BITS\",\"the maintenance service registry key is not present\"]"^); // Автообновление включено, в фоне отключено
+			ECHO user_pref^("gfx.webrender.dcomp-video-hw-overlay-win-force-enabled", true^); // Хз что делает, но без неё не работает NVIDIA Super Resolution
 		)>"userdata\prefs.js"
 ::	ECHO Создание  файла стилей userChrome.css . . .
 		IF NOT EXIST "userdata\chrome" MD "userdata\chrome"
@@ -171,5 +172,6 @@
 	PAUSE
 
 	EXIT
+
 
 
